@@ -1,0 +1,162 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <style type="text/css">
+        @font-face {
+            font-family: "Stratum No1";
+            src: url({{asset('asset/fonts/stratumno1.ttf')}});
+        }
+        .navbar{
+            font-family: "Stratum No1", sans-serif;
+
+        }
+        #background_top{
+            background-image: url({{ asset('asset/img/fond_top.png')}});
+            background-repeat: no-repeat;
+            background-size: 100%;
+            padding-top: 2%;
+
+        }
+        #background_bot{
+            background-image: url({{ asset('asset/img/fond_bottom.png')}});
+            background-repeat: no-repeat;
+            background-size: 100%;
+            background-position: bottom;
+            padding-bottom: 30px;
+        }
+    </style>
+    <link rel="stylesheet" href="{{ asset('asset/css/accueil.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('asset/css/regle.css') }}" type="text/css" />
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+{% endblock %}
+{% block header %}
+    <div id="background_top">
+        <nav class="navbar">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-6" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="{{ path('index') }}" class="navbar-brand"><img id="logo_ed" src="{{ asset('asset/img/logo2.png') }}"></a>
+                </div>
+                <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-6" aria-expanded="false" style="height: 1px;">
+                    <ul class="nav navbar-nav">
+                        <li><a href="{{ path('regle') }}">REGLE</a></li>
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                            <li><a href="{{ path('profil') }}">PROFIL</a></li>
+                        {% endif %}
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") and app.user.getisBan == 'off' %}
+                            <li><a href="{{ path('nouvelle_partie') }}">JOUER</a></li>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li><a href="{{ path('admin') }}">ADMIN</a></li>
+                        {% endif %}
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+
+                            <li><a href="{{ path('security_logout') }}">DECONNEXION</a></li>
+                        {% else %}
+                            <li><a href="{{ path('security_login') }}">CONNEXION</a></li>
+                        {% endif %}
+                        <li><a href="{{ path('user_registration') }}">INSCRIPTION</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div id="titre_page_cont">
+            <p id="titre_accueil">REGLE</p>
+            <img id="logo_titre" src="{{ asset('asset/img/logo2.png') }}">
+        </div>
+    </div>
+{% endblock %}
+{% block body %}
+    <div class="container" style="display: flex; flex-direction: column">
+        <hr class="hr_accueil">
+
+        <iframe style="margin: auto" width="560" height="315" src="https://www.youtube.com/embed/eYelnLJLDrQ?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+        <h3><b>Règles</b></h3>
+        <p class="texte_justifie">LE CAPITAINE JACQUES DANIELS, CÉLÈBRE CAPITAINE ET APPRÉCIÉ DANS LA COMMUNAUTÉ DES PIRATES, SOUHAITE CRÉER UN ÉQUIPAGE PUISSANT AFIN DE RÉTABLIR L’ORDRE DANS LA CONFRÉRIE. BALTHATZAR, UN CAPITAINE DÉMONIAQUE ET SANS COEUR FAIT RÉGNER LA TERREUR  EN MASSACRANT FEMMES, ENFANTS ET EN PILLANT LE PEUPLE DEPUIS LONGTEMPS. AFIN D’ENGAGER DE PUISSANTS PIRATES, JACQUES DANIELS A RÉFLÉCHI À DIFFÉRENTES FACONS D’ENROLER SES CONFRÈRES... LORSQUE L’ATTELAGE SERA  CRÉÉ, DANIELS ET SES PIRATES PARTIRONT À LA CONQUÊTE DE LA GALAXIE POUR RENVERSER BALTHAZAR.  DANS EDEN’S RUSH, LES JOUEURS S’AFFRONTENT AFIN D’OBTENIR LES FAVEURS DE DIFFÉRENTS PIRATES AU PASSÉE TRAGIQUE. DIFFÉRENTS OBJETS ATTIRERONT LES PIRATES, EN FONCTION DE LEUR CARACTÈRE ET DE LEURS PERFORMANCES. LE JOUEUR DEVRA ANTICIPER ET PROCÉDER À DES CHOIX JUDICIEUX. IL FAUDRA QU’IL GAGNE LES OBJETS ESSENTIELS QUI LUI PERMETTRONT D’OBTENIR LES PIRATES AUX CAPACITÉS LES PLUS FORTES...  LEQUEL D’ENTRE-VOUS SERA PLUS RUSÉ QUE SON ADVERSAIRE ? QUI OBTIENDRA LA MAJORITÉ DE PIRATES AFIN DE CRÉER L’ÉQUIPAGE LE PLUS PUISSANT ET PARVIENDRA À RENVERSER LE DÉMONIAQUE BALTHAZAR ?</p><br><br>
+
+
+        <h4><b>BUT DU JEU</b></h4>
+        <p>DANS EDEN’S RUSH, LE BUT DU JEU EST DE GAGNER 4 PIRATES OU 11 (OU PLUS) POINTS DE FORCE.</p>
+        <p>VOTRE ADVERSAIRE ET VOUS ALLEZ JOUER CHACUN VOTRE TOUR, ET VOUS ALLEZ RÉALISER DES ACTIONS POUR OBTENIR DIFFÉRENTES SORTES DE CARTES OBJET. POUR CHAQUE PIRATE, SI VOUS AVEZ PLUS DE CARTES D’OBJET QUE VOTRE ADVERSAIRE, VOUS REMPORTEZ LA FAVEUR DU PIRATE.</p>
+        <p>LA PARTIE SE POURSUIT JUSQU’À CE QU’UN DES JOUEURS AIT L’OBJECTIF POUR REMPORTER LA PARTIE LORS DU DÉCOMPTE DES POINTS.</p><br><br>
+
+
+        <h4><b>CONTENU</b></h4>
+        <p> - 7 CARTES PIRATE</p>
+        <p> - 21 CARTES OBJET</p>
+        <p> - 8 JETONS ACTION</p>
+        <p> - 7 JETONS DE VICTOIRE</p><br><br>
+
+
+        <h4><b>MISE EN PLACE</b></h4>
+        <p>1. ALIGNEZ LES 7 CARTES PIRATE, DANS L’ORDRE SUIVANT DE GAUCHE À DROITE, ENTRE LES DEUX JOUEURS.</p>
+        <p>2. PLACEZ 1 JETON VICTOIRE AU CENTRE DE CHAQUE CARTE PIRATE.</p>
+        <p>3. FORMEZ UNE PILE AVEC TOUTES LES CARTES D’OBJET, FACE CACHÉE, QUE VOUS PLACEZ À CÔTÉ DE LA RANGÉE DES PIRATES.</p>
+        <p>4. CHAQUE JOUEUR PREND 4 JETONS D’ACTION DE LA MÊME COULEUR, FACE COLORÉE VISIBLE, ET IL LES PLACE DEVANT LUI.</p>
+        <p>5. LE PLUS JEUNE JOUEUR EST DÉSIGNÉ COMME PREMIER JOUEUR.</p><br>
+
+
+        <h4><b>SÉQUENCE DU JEU</b></h4>
+        <p>LE JEU SE JOUE EN UNE OU PLUSIEURS MANCHES. CHAQUE MANCHE EST CONSTITUÉE DE TROIS PHASES JOUÉES DANS L’ORDRE SUIVANT :</p>
+        <p>&emsp;&emsp;&emsp;PHASE 1 : DISTRIBUER</p>
+        <p>&emsp;&emsp;&emsp;PHASE 2 : ACTION</p>
+        <p>&emsp;&emsp;&emsp;PHASE 3 : DÉCOMPTE DES POINTS ET MISE À JOUR</p>
+        <p>SI UN JOUEUR ATTEINT L’OBJECTIF DE VICTOIRE LORS DE LA PHASE DE DÉCOMPTE DES POINTS, LA PARTIE SE TERMINE IMMÉDIATEMENT. SI AUCUN DES JOUEURS N’A ATTEINT L’OBJECTIF, UNE NOUVELLE MANCHE EST JOUÉE. LA PARTIE SE POURSUIT JUSQU’À CE QU’UN DES JOUEURS L’EMPORTE.</p><br>
+
+
+        <h4><b>ACTIONS</b></h4>
+        <p>1. SECRET :</p>
+        <p>&emsp;&emsp;&emsp;CHOISISSEZ 1 CARTE DE VOTRE MAIN, ET PLACEZ-LA FACE CACHÉE SOUS LE JETON SECRET. CETTE CARTE SERA RÉVÉLÉE LORS DE LA PHASE DE DÉCOMPTE DES POINTS ET ELLE RAPPORTERA DES POINTS.</p>
+        <p>&emsp;&emsp;&emsp;VOUS POUVEZ REGARDER CETTE CARTE À TOUT MOMENT DANS LA PARTIE.</p><br>
+
+        <p>2. COMPROMIS :</p>
+        <p>&emsp;&emsp;&emsp;CHOISISSEZ 2 CARTES DE VOTRE MAIN, ET PLACEZ-LES FACE CACHÉE SOUS LE JETON DE COMPROMIS. CES CARTES NE RAPPORTERONT PAS DE POINTS LORS DE CETTE MANCHE.</p>
+        <p>&emsp;&emsp;&emsp;VOUS POUVEZ REGARDER CES CARTES À TOUT MOMENT DANS LA PARTIE.</p>
+
+        <p>3. CADEAU :</p>
+        <p>&emsp;&emsp;&emsp;CHOISISSEZ 3 CARTES DE VOTRE MAIN, ET PLACEZ-LES FACE VISIBLE DEVANT VOUS.</p>
+        <p>&emsp;&emsp;&emsp;VOTRE ADVERSAIRE CHOISIT 1 CARTE PARMI CELLES-CI ET IL LA PLACE SUR SON CÔTÉ DE LA LIGNE DES PIRATES, À CÔTÉ DU PIRATE CORRESPONDANT. PLACEZ ENSUITE LES 2 CARTES DE VOTRE CÔTÉ, À CÔTÉ DES PIRATES CORRESPONDANTS. CES CARTES RAPPORTERONT DES POINTS.</p>
+
+        <p>4. CONCURRENCE :</p>
+        <p>&emsp;&emsp;&emsp;CHOISISSEZ 4 CARTES DE VOTRE MAIN ET PLACEZ-LES FACE VISIBLE DEVANT VOUS. VOUS DIVISEZ CES CARTES EN DEUX SÉRIES COMPRENANT CHACUNE 2 CARTES.</p>
+        <p>&emsp;&emsp;&emsp;VOTRE ADVERSAIRE CHOISIT 1 SÉRIE ET PLACE CES 2 CARTES DE SON CÔTÉ DE LA LIGNE DES PIRATES À CÔTÉ DES PIRATES CORRESPONDANTS. PLACEZ ENSUITE LES 2 CARTES RESTANTES DE VOTRE CÔTÉ, À CÔTÉ DES PIRATES CORRESPONDANTS. CES CARTES RAPPORTERONT DES POINTS.</p>
+        <br><br>
+
+
+        <h4><b>FIN DE PARTIE</b></h4>
+        <p>SI UN JOUEUR A REMPORTÉ 4 PIRATES OU 11 (OU PLUS) DE POINTS DE FORCE, LA PARTIE SE TERMINE IMMÉDIATEMENT.</p>
+        <p>SI UN SEUL JOUEUR ATTEINT L’OBJECTIF DE VICTOIRE, IL EST LE VAINQUEUR.</p>
+        <p>SI UN JOUEUR A REMPORTÉ 4 PIRATES ET QUE L’AUTRE A REMPORTÉ 11 (OU PLUS) POINTS DE FORCE, CE DERNIER EST LE VAINQUEUR.</p>
+    </div>
+
+{% endblock %}
+
+{% block footer %}
+    <div>
+        <div class="container">
+            <hr class="hr_accueil">
+        </div>
+        <div id="background_bot">
+
+            <div id="footer_page_cont">
+                <div id="footer_flag">
+                    <a href="{{ path('regle') }}"><img src="{{ asset('asset/img/fr.png') }}" class="drapeau" alt="français"></a>
+                    <a href="{{ path('rules') }}"><img src="{{ asset('asset/img/en.png') }}" class="drapeau" alt="english"></a>
+                    <a href="{{ path('reglas') }}"><img src="{{ asset('asset/img/es.png') }}" class="drapeau" alt="spanish"></a>
+                </div>
+                <img id="logo_footer" src="{{ asset('asset/img/logonwaaar.png') }}">
+                <p id="copyright">©2018 BananaGames. Tous droit réservés. Condition d'utilisation - Politique de confidentialité - Conditions générales de vente - Mention légales</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,161 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <style type="text/css">
+        @font-face {
+            font-family: "Stratum No1";
+            src: url({{asset('asset/fonts/stratumno1.ttf')}});
+        }
+        .navbar{
+            font-family: "Stratum No1", sans-serif;
+
+        }
+        #background_top{
+            background-image: url({{ asset('asset/img/fond_top.png')}});
+            background-repeat: no-repeat;
+            background-size: 100%;
+            padding-top: 2%;
+
+        }
+        #background_bot{
+            background-image: url({{ asset('asset/img/fond_bottom.png')}});
+            background-repeat: no-repeat;
+            background-size: 100%;
+            background-position: bottom;
+            padding-bottom: 30px;
+        }
+    </style>
+    <link rel="stylesheet" href="{{ asset('asset/css/accueil.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('asset/css/regle.css') }}" type="text/css" />
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+{% endblock %}
+{% block header %}
+    <div id="background_top">
+        <nav class="navbar">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-6" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="{{ path('index') }}" class="navbar-brand"><img id="logo_ed" src="{{ asset('asset/img/logo2.png') }}"></a>
+                </div>
+                <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-6" aria-expanded="false" style="height: 1px;">
+                    <ul class="nav navbar-nav">
+                        <li><a href="{{ path('regle') }}">REGLE</a></li>
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                            <li><a href="{{ path('profil') }}">PROFIL</a></li>
+                        {% endif %}
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") and app.user.getisBan == 'off' %}
+                            <li><a href="{{ path('nouvelle_partie') }}">JOUER</a></li>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li><a href="{{ path('admin') }}">ADMIN</a></li>
+                        {% endif %}
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+
+                            <li><a href="{{ path('security_logout') }}">DECONNEXION</a></li>
+                        {% else %}
+                            <li><a href="{{ path('security_login') }}">CONNEXION</a></li>
+                        {% endif %}
+                        <li><a href="{{ path('user_registration') }}">INSCRIPTION</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div id="titre_page_cont">
+            <p id="titre_accueil">RULES</p>
+            <img id="logo_titre" src="{{ asset('asset/img/logo2.png') }}">
+        </div>
+    </div>
+{% endblock %}
+{% block body %}
+    <div class="container">
+        <hr class="hr_accueil">
+
+
+        <h3><b>Rules</b></h3>
+        <p class="texte_justifie">THE CAPTAIN JACQUES DANIELS, FAMOUS CAPTAIN AND APPRECIATED IN THE COMMUNITY OF PIRATES, WISHES TO CREATE A POWERFUL CREW IN ORDER TO RESTORE ORDER IN THE BROTHERHOOD. BALTHATZAR, A DEVILISH AND HEARTLESS CAPTAIN MAKES TERROR REIGN BY MASSACRING WOMEN, CHILDREN AND LOOTING THE PEOPLE FOR A LONG TIME. IN ORDER TO HIRE POWERFUL PIRATES, JACQUES DANIELS HAS THOUGHT ABOUT DIFFERENT WAYS OF WRAPPING HIS COLLEAGUES... WHEN THE TEAM IS CREATED, DANIELS AND HIS PIRATES WILL SET OUT TO CONQUER THE GALAXY TO OVERTHROW BALTHAZAR.  IN EDEN'S RUSH, PLAYERS COMPETE FOR THE FAVORS OF VARIOUS PIRATES WITH A TRAGIC PAST. DIFFERENT OBJECTS WILL ATTRACT PIRATES, DEPENDING ON THEIR CHARACTER AND PERFORMANCE. THE PLAYER WILL HAVE TO ANTICIPATE AND MAKE WISE CHOICES. HE WILL HAVE TO WIN THE ESSENTIAL ITEMS THAT WILL ENABLE HIM TO OBTAIN THE PIRATES WITH THE STRONGEST ABILITIES...  WHICH ONE OF YOU WILL BE SMARTER THAN HIS OPPONENT? WHO WILL GET THE MAJORITY OF PIRATES TO CREATE THE MOST POWERFUL CREW AND SUCCEED IN OVERTHROWING THE EVIL BALTHAZAR?</p><br><br>
+
+
+        <h4><b>Game's purpose</b></h4>
+        <p>IN EDEN'S RUSH, THE GOAL OF THE GAME IS TO WIN 4 PIRATES OR 11 (OR MORE) STRENGTH POINTS.</p>
+        <p>YOUR OPPONENT AND YOU WILL TAKE TURNS, AND YOU GO RÉALISER ACTIONS TO GET RÉALISER KINDS OF OBJECT CARDS. FOR EACH PIRATE, IF YOU HAVE MORE OBJECT CARDS THAN YOUR OPPONENT, YOU WIN THE PIRATE'S FAVOR.</p>
+        <p>THE PARTY CONTINUES UNTIL ONE OF THE PLAYERS HAS THE OBJECTIVE TO WIN THE PART ON THE DATE OF THE POINTS.</p><br><br>
+
+
+        <h4><b>CONTENT</b></h4>
+        <p> - 7 PIRATE CARDS</p>
+        <p> - 21 OBJECT CARDS</p>
+        <p> - 8 ACTION TOKENS</p>
+        <p> - 7 TOKENS OF VICTORY</p><br><br>
+
+
+        <h4><b>SETTING UP</b></h4>
+        <p>1. ALIGN THE 7 PIRATE CARDS, IN THE FOLLOWING ORDER LEFT TO RIGHT, BETWEEN THE TWO PLAYERS.</p>
+        <p>2. PLACE 1 VICTORY TOKEN AT THE CENTER OF EACH PIRATE CARD.</p>
+        <p>3. FORM A PILE WITH ALL THE CARDS OF OBJECT, HIDDEN FACE, THAT YOU PLACE NEXT TO THE ROW OF THE PIRATES.</p>
+        <p>4. EACH PLAYER TAKES 4 ACTION TOKENS OF THE SAME COLOR, FACE COLORED VISIBLE, AND HE PLACES THEM IN FRONT OF HIM.</p>
+        <p>5. THE YOUNGEST PLAYER IS DESIGNATED AS THE FIRST PLAYER.</p><br>
+
+
+        <h4><b>GAME SEQUENCE</b></h4>
+        <p>THE GAME IS PLAYED IN ONE OR SEVERAL ROUNDS. EACH ROUND CONSISTS OF THREE PHASES PLAYED IN THE FOLLOWING ORDER:</p>
+        <p>&emsp;&emsp;&emsp;PHASE 1: DISTRIBUTE</p>
+        <p>&emsp;&emsp;&emsp;PHASE 2: ACTION</p>
+        <p>&emsp;&emsp;&emsp;PHASE 3: SCORE COUNT AND UPDATE</p>
+        <p>IF A PLAYER ACHIEVES THE VICTORY GOAL IN THE SCORING PHASE, THE GAME ENDS IMMEDIATELY. IF NONE OF THE PLAYERS HAS REACHED THE GOAL, A NEW ROUND IS PLAYED. THE GAME CONTINUES UNTIL ONE OF THE PLAYERS WINS.</p><br>
+
+
+        <h4><b>ACTIONS</b></h4>
+        <p>1. SECRET:</p>
+        <p>&emsp;&emsp;&emsp;CHOOSE 1 CARD FROM YOUR HAND, AND PLACE IT FACE DOWN UNDER THE SECRET TOKEN. THIS CARD WILL BE REVEALED DURING THE POINT COUNTING PHASE AND WILL EARN POINTS.</p>
+        <p>&emsp;&emsp;&emsp;YOU CAN VIEW THIS CARD AT ANY TIME IN THE GAME.</p><br>
+
+        <p>2. COMPROMISE:</p>
+        <p>&emsp;&emsp;&emsp;CHOOSE 2 CARDS FROM YOUR HAND, AND PLACE THEM FACE DOWN UNDER THE COMPROMISE CHIP. THESE CARDS WILL NOT EARN POINTS IN THIS ROUND.</p>
+        <p>&emsp;&emsp;&emsp;YOU CAN LOOK AT THESE MAPS À ANY TIME IN THE GAME.</p>
+
+        <p>3. GIFT:</p>
+        <p>&emsp;&emsp;&emsp;CHOOSE 3 CARDS FROM YOUR HAND, AND PLACE THEM FACE UP IN FRONT OF YOU.</p>
+        <p>&emsp;&emsp;&emsp;YOUR OPPONENT CHOOSES 1 CARD FROM THESE AND PLACES IT ON HIS SIDE OF THE PIRATE LINE, À SIDE OF THE CORRESPONDING PIRATE. THEN PLACE THE 2 CARDS ON YOUR SIDE, NEXT TO THE CORRESPONDING PIRATES. THESE CARDS WILL EARN POINTS.</p>
+
+        <p>4. COMPETITION:</p>
+        <p>&emsp;&emsp;&emsp;CHOOSE 4 CARDS FROM YOUR HAND AND PLACE THEM FACE UP IN FRONT OF YOU. YOU DIVIDE THESE CARDS INTO TWO SETS EACH CONSISTING OF 2 CARDS.</p>
+        <p>&emsp;&emsp;&emsp;YOUR OPPONENT CHOOSES 1 SERIES AND PLACES THESE 2 CARDS FROM HIS SIDE OF THE PIRATE LINE À SIDE OF THE CORRESPONDING PIRATES. THEN PLACE THE REMAINING 2 CARDS OF YOUR SIDE, NEXT TO THE CORRESPONDING PIRATES. THESE CARDS WILL EARN POINTS.</p>
+        <br><br>
+
+
+        <h4><b>GAME OVER</b></h4>
+        <p>IF A PLAYER HAS RECEIVED 4 PIRATES OR 11 (OR MORE) POINTS OF STRENGTH, THE PARTY TERMINATES IMMEDIATELY.</p>
+        <p>IF ONE PLAYER REACHES THE OBJECTIVE OF VICTORY, HE IS THE WINNER.</p>
+        <p>IF ONE PLAYER HAS RECEIVED 4 PIRATES AND THE OTHER HAS RECEIVED 11 (OR MORE) POINTS OF STRENGTH, THE ONE IS THE WINNER.</p>
+    </div>
+
+{% endblock %}
+
+{% block footer %}
+    <div>
+        <div class="container">
+            <hr class="hr_accueil">
+        </div>
+        <div id="background_bot">
+
+            <div id="footer_page_cont">
+                <div id="footer_flag">
+                    <a href="{{ path('regle') }}"><img src="{{ asset('asset/img/fr.png') }}" class="drapeau" alt="français"></a>
+                    <a href="{{ path('rules') }}"><img src="{{ asset('asset/img/en.png') }}" class="drapeau" alt="english"></a>
+                    <a href="{{ path('reglas') }}"><img src="{{ asset('asset/img/es.png') }}" class="drapeau" alt="spanish"></a>
+                </div>
+                <img id="logo_footer" src="{{ asset('asset/img/logonwaaar.png') }}">
+                <p id="copyright">©2018 BananaGames. Tous droit réservés. Condition d'utilisation - Politique de confidentialité - Conditions générales de vente - Mention légales</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

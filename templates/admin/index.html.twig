@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+{% block header %}
+    <div id="background_top">
+        <nav class="navbar">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-6" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="{{ path('index') }}" class="navbar-brand"><img id="logo_ed" src="{{ asset('asset/img/logo2.png') }}"></a>
+                </div>
+                <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-6" aria-expanded="false" style="height: 1px;">
+                    <ul class="nav navbar-nav">
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                            <li><a href="{{ path('profil') }}">PROFIL</a></li>
+                        {% endif %}
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") and app.user.getisBan == 'off' %}
+                            <li><a href="{{ path('nouvelle_partie') }}">JOUER</a></li>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li><a href="{{ path('admin') }}">ADMIN</a></li>
+                        {% endif %}
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+
+                            <li><a href="{{ path('security_logout') }}">DECONNEXION</a></li>
+                        {% else %}
+                            <li><a href="{{ path('security_login') }}">CONNEXION</a></li>
+                        {% endif %}
+                        <li><a href="{{ path('user_registration') }}">INSCRIPTION</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div id="titre_page_cont">
+            <p id="titre_accueil">ADMIN</p>
+            <img id="logo_titre" src="{{ asset('asset/img/logo2.png') }}">
+        </div>
+    </div>
+{% endblock %}
+{% block body %}
+    <h1>Bienvenue {{ app.user.username }} !</h1>
+
+
+
+        <div class="panel panel-primary">
+            <div class="panel-heading"><h1>Liste des joueurs&nbsp;<span class="glyphicon glyphicon-globe"></span></h1></div>
+            <div class="panel-body">
+                <table class="table">
+                    <thread>
+                        <tr>
+                            <th>
+                                #
+                            </th>
+                            <th>
+                                Username
+                            </th>
+                            <th>
+                                Email
+                            </th>
+                            <th>
+                                NbPartie
+                            </th>
+                            <th>
+                                WinPartie
+                            </th>
+                            <th>
+                                Role
+                            </th>
+                            <th>
+                                Ban
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                            <th>
+
+                            </th>
+                        </tr>
+                    </thread>
+                    <tbody>
+                    {% for joueur in joueurs %}
+                        <tr>
+                            <th>
+                                {{ joueur.id }}
+                            </th>
+                            <th>
+                                {{ joueur.username }}
+                            </th>
+                            <th>
+                                {{ joueur.email }}
+                            </th>
+                            <th>
+                                {{ joueur.getNbPartie }}
+                            </th>
+                            <th>
+                                {{ joueur.getWinParties() }}
+                            </th>
+                            <th>
+                                {%  for key in joueur.roles %}
+                                    {{ key }}
+                                {% endfor %}
+                            </th>
+                            <th>
+                                {{ joueur.getisBan() }}
+                            </th>
+                            <th>
+                                <form method="post" action="{{ path('admin_suppr', {'id': joueur.id}) }}"><button class="btn btn-danger" type="submit">Supprimer</button></form>
+                            </th>
+                            <th>
+                                {% if joueur.getisBan == 'off' %}
+                                    <form method="post" action="{{ path('admin_ban', {'id': joueur.id}) }}"><button class="btn btn-danger" type="submit">Bloquer</button></form>
+                                {% else %}
+                                    <form method="post" action="{{ path('admin_ban', {'id': joueur.id}) }}"><button class="btn btn-primary" type="submit">Débloquer</button></form>
+                                {% endif %}
+                            </th>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+
+{% endblock %}

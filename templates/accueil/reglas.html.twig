@@ -1,0 +1,161 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <style type="text/css">
+        @font-face {
+            font-family: "Stratum No1";
+            src: url({{asset('asset/fonts/stratumno1.ttf')}});
+        }
+        .navbar{
+            font-family: "Stratum No1", sans-serif;
+
+        }
+        #background_top{
+            background-image: url({{ asset('asset/img/fond_top.png')}});
+            background-repeat: no-repeat;
+            background-size: 100%;
+            padding-top: 2%;
+
+        }
+        #background_bot{
+            background-image: url({{ asset('asset/img/fond_bottom.png')}});
+            background-repeat: no-repeat;
+            background-size: 100%;
+            background-position: bottom;
+            padding-bottom: 30px;
+        }
+    </style>
+    <link rel="stylesheet" href="{{ asset('asset/css/accueil.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('asset/css/regle.css') }}" type="text/css" />
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+{% endblock %}
+{% block header %}
+    <div id="background_top">
+        <nav class="navbar">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-6" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="{{ path('index') }}" class="navbar-brand"><img id="logo_ed" src="{{ asset('asset/img/logo2.png') }}"></a>
+                </div>
+                <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-6" aria-expanded="false" style="height: 1px;">
+                    <ul class="nav navbar-nav">
+                        <li><a href="{{ path('regle') }}">REGLE</a></li>
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                            <li><a href="{{ path('profil') }}">PROFIL</a></li>
+                        {% endif %}
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") and app.user.getisBan == 'off' %}
+                            <li><a href="{{ path('nouvelle_partie') }}">JOUER</a></li>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li><a href="{{ path('admin') }}">ADMIN</a></li>
+                        {% endif %}
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+
+                            <li><a href="{{ path('security_logout') }}">DECONNEXION</a></li>
+                        {% else %}
+                            <li><a href="{{ path('security_login') }}">CONNEXION</a></li>
+                        {% endif %}
+                        <li><a href="{{ path('user_registration') }}">INSCRIPTION</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div id="titre_page_cont">
+            <p id="titre_accueil">REGLAS</p>
+            <img id="logo_titre" src="{{ asset('asset/img/logo2.png') }}">
+        </div>
+    </div>
+{% endblock %}
+{% block body %}
+    <div class="container">
+        <hr class="hr_accueil">
+
+
+        <h3><b>Reglas</b></h3>
+        <p class="texte_justifie">EL CAPITÁN JACQUES DANIELS, FAMOSO CAPITÁN Y APRECIADO EN LA COMUNIDAD DE PIRATAS, DESEA CREAR UNA PODEROSA TRIPULACIÓN PARA RESTAURAR EL ORDEN EN LA HERMANDAD. BALTHATZAR, UN CAPITÁN DIABÓLICO Y DESPIADADO, HACE REINAR EL TERROR MASACRANDO MUJERES, NIÑOS Y SAQUEANDO A LA GENTE DURANTE MUCHO TIEMPO. PARA CONTRATAR A PODEROSOS PIRATAS, JACQUES DANIELS HA PENSADO EN DIFERENTES FORMAS DE ENVOLVER A SUS COLEGAS... CUANDO SE CREE EL EQUIPO, DANIELS Y SUS PIRATAS SE PONDRÁN A CONQUISTAR LA GALAXIA PARA DERROCAR A BALTHAZAR.  EN EL APURO DEL EDÉN, LOS JUGADORES COMPITEN POR LOS FAVORES DE VARIOS PIRATAS CON UN PASADO TRÁGICO. DIFERENTES OBJETOS ATRAERÁN A LOS PIRATAS, DEPENDIENDO DE SU CARÁCTER Y RENDIMIENTO. EL JUGADOR TENDRÁ QUE ANTICIPARSE Y TOMAR DECISIONES SABIAS. TENDRÁ QUE GANAR LOS OBJETOS ESENCIALES QUE LE PERMITIRÁN OBTENER LOS PIRATAS CON LAS HABILIDADES MÁS FUERTES...  ¿QUIÉN DE USTEDES SERÁ MÁS LISTO QUE SU OPONENTE? ¿QUIÉN CONSEGUIRÁ QUE LA MAYORÍA DE LOS PIRATAS CREEN LA TRIPULACIÓN MÁS PODEROSA Y CONSIGAN DERROCAR AL MALVADO BALTHAZAR?</p><br><br>
+
+
+        <h4><b>OBJETIVO DEL JUEGO</b></h4>
+        <p>EN EL APURO DEL EDÉN, EL OBJETIVO DEL JUEGO ES GANAR 4 PIRATAS U 11 (O MÁS) PUNTOS DE FUERZA.</p>
+        <p>TÚ Y TU OPONENTE TOMARÉIS TURNOS, Y REALIZARÉIS ACCIONES PARA CONSEGUIR DIFERENTES TIPOS DE CARTAS OBJETO. POR CADA PIRATA, SI TIENES MÁS CARTAS DE OBJETO QUE TU OPONENTE, GANAS EL FAVOR DEL PIRATA.</p>
+        <p>EL JUEGO CONTINÚA HASTA QUE UNO DE LOS JUGADORES TIENE EL OBJETIVO DE GANAR EL JUEGO EN DÉCOMPTE PUNTOS.</p><br><br>
+
+
+        <h4><b>CONTENIDO</b></h4>
+        <p> - 7 PIRATA TARJETAS</p>
+        <p> - 21 TARJETAS DE OBJETOS</p>
+        <p> - 8 FICHAS DE ACCION</p>
+        <p> - 7 FICHAS DE VICTORIA</p><br><br>
+
+
+        <h4><b>CONFIGURACIÓN</b></h4>
+        <p>1. ALINEE LAS 7 TARJETAS DE PIRATA, EN LA SIGUIENTE ORDEN DE IZQUIERDA A LA DERECHA, ENTRE LOS DOS JUGADORES.</p>
+        <p>2. PONER 1 FICHA DE VICTORIA EN EL CENTRO DE CADA CARTA PIRATA.</p>
+        <p>3. FORMA UNA PILA CON TODAS LAS CARTAS OBJETO, BOCA ABAJO, QUE PONES AL LADO DE LA FILA DE PIRATAS.</p>
+        <p>4. CADA JUGADOR TOMA 4 FICHAS DE ACCIÓN DEL MISMO COLOR, BOCA ARRIBA, Y LAS COLOCA FRENTE A ÉL.</p>
+        <p>5. EL JUGADOR MÁS JOVEN ES DESIGNADO COMO EL PRIMER JUGADOR.</p><br>
+
+
+        <h4><b>SECUENCIA DEL JUEGO</b></h4>
+        <p>EL JUEGO SE JUEGA EN UNA O VARIAS RONDAS. CADA RONDA CONSTA DE TRES FASES QUE SE JUEGAN EN EL SIGUIENTE ORDEN:</p>
+        <p>&emsp;&emsp;&emsp;FASE 1: DISTRIBUIR</p>
+        <p>&emsp;&emsp;&emsp;FASE 2: ACCIÓN</p>
+        <p>&emsp;&emsp;&emsp;FASE 3 : RECUENTO Y ACTUALIZACIÓN DE PUNTOS</p>
+        <p>SI UN JUGADOR LOGRA EL GOL DE LA VICTORIA EN LA FASE DE GOL, EL JUEGO TERMINA INMEDIATAMENTE. SI NINGUNO DE LOS JUGADORES HA ALCANZADO LA META, SE JUEGA UNA NUEVA RONDA. EL JUEGO CONTINÚA HASTA QUE UNO DE LOS JUGADORES GANA.</p><br>
+
+
+        <h4><b>ACCIONES</b></h4>
+        <p>1. SECRETO:</p>
+        <p>&emsp;&emsp;&emsp;ELIGE 1 CARTA DE TU MANO Y COLÓCALA BOCA ABAJO BAJO LA FICHA SECRETA. ESTA CARTA SERÁ REVELADA DURANTE LA FASE DE CONTEO DE PUNTOS Y GANARÁ PUNTOS.</p>
+        <p>&emsp;&emsp;&emsp;PUEDES VER ESTE CARTA EN À EN CUALQUIER MOMENTO DEL JUEGO.</p><br>
+
+        <p>2. COMPROMISO:</p>
+        <p>&emsp;&emsp;&emsp;ELIGE 2 CARTAS DE TU MANO, Y COLÓCALAS BOCA ABAJO BAJO EL CHIP DE COMPROMISO. ESTAS CARTAS NO GANARÁN PUNTOS EN ESTA RONDA.</p>
+        <p>&emsp;&emsp;&emsp;PUEDES VER ESTOS CARTAS EN À EN CUALQUIER MOMENTO DEL JUEGO.</p>
+
+        <p>3. CADEAU :</p>
+        <p>&emsp;&emsp;&emsp;ELIGE 3 CARTAS DE TU MANO, Y COLÓCALAS BOCA ARRIBA DELANTE DE TI.</p>
+        <p>&emsp;&emsp;&emsp;TU OPONENTE ELIGE 1 CARTA DE ÉSTAS Y LA COLOCA EN SU LADO DE LA LÍNEA PIRATA, JUNTO AL PIRATA CORRESPONDIENTE. LUEGO COLOCA LAS 2 CARTAS DE TU LADO, AL LADO DE LOS PIRATAS CORRESPONDIENTES. ESTAS CARTAS GANARÁN PUNTOS.</p>
+
+        <p>4. COMPETENCIA:</p>
+        <p>&emsp;&emsp;&emsp;ELIGE 4 CARTAS DE TU MANO Y COLÓCALAS BOCA ARRIBA DELANTE DE TI. DIVIDES ESTAS CARTAS EN DOS GRUPOS DE 2 CARTAS CADA UNO.</p>
+        <p>&emsp;&emsp;&emsp;TU OPONENTE ELIGE 1 SERIE Y COLOCA ESTAS 2 CARTAS DE SU LADO DE LA LÍNEA PIRATA JUNTO A LOS PIRATAS CORRESPONDIENTES. LUEGO COLOCA LAS 2 CARTAS RESTANTES DE TU BANDO, JUNTO A LOS PIRATAS CORRESPONDIENTES. ESTAS CARTAS GANARÁN PUNTOS.</p>
+        <br><br>
+
+
+        <h4><b>FIN DE LA PARTE</b></h4>
+        <p>SI UN JUGADOR HA GANADO 4 PIRATAS O 11 (O MÁS) PUNTOS DE FUERZA, EL JUEGO TERMINA EN IMMÉDIATEMENT.</p>
+        <p>SI SÓLO UN JUGADOR ALCANZA EL OBJETIVO DE LA VICTORIA, ÉL ES EL GANADOR.</p>
+        <p>SI UN JUGADOR HA GANADO 4 PIRATAS Y EL OTRO HA GANADO 11 (O MÁS) PUNTOS DE FUERZA, ESTE ÚLTIMO ES EL GANADOR.</p>
+    </div>
+
+{% endblock %}
+
+{% block footer %}
+    <div>
+        <div class="container">
+            <hr class="hr_accueil">
+        </div>
+        <div id="background_bot">
+
+            <div id="footer_page_cont">
+                <div id="footer_flag">
+                    <a href="{{ path('regle') }}"><img src="{{ asset('asset/img/fr.png') }}" class="drapeau" alt="français"></a>
+                    <a href="{{ path('rules') }}"><img src="{{ asset('asset/img/en.png') }}" class="drapeau" alt="english"></a>
+                    <a href="{{ path('reglas') }}"><img src="{{ asset('asset/img/es.png') }}" class="drapeau" alt="spanish"></a>
+                </div>
+                <img id="logo_footer" src="{{ asset('asset/img/logonwaaar.png') }}">
+                <p id="copyright">©2018 BananaGames. Tous droit réservés. Condition d'utilisation - Politique de confidentialité - Conditions générales de vente - Mention légales</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

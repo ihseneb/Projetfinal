@@ -1,0 +1,176 @@
+{% extends 'base.html.twig' %}
+    {% block stylesheets %}
+        <style type="text/css">
+            @font-face {
+                font-family: "Stratum No1";
+                src: url({{asset('asset/fonts/stratumno1.ttf')}});
+            }
+            .navbar{
+                font-family: "Stratum No1", sans-serif;
+
+            }
+            #background_top{
+                background-image: url({{ asset('asset/img/fond_top.png')}});
+                background-repeat: no-repeat;
+                background-size: 100%;
+                padding-top: 2%;
+
+            }
+            #background_bot{
+                background-image: url({{ asset('asset/img/fond_bottom.png')}});
+                background-repeat: no-repeat;
+                background-size: 100%;
+                background-position: bottom;
+                padding-bottom: 30px;
+            }
+        </style>
+        <link rel="stylesheet" href="{{ asset('asset/css/accueil.css') }}" type="text/css" />
+        <link rel="stylesheet" href="{{ asset('asset/css/profil.css') }}" type="text/css" />
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    {% endblock %}
+{% block header %}
+    <div id="background_top">
+        <nav class="navbar">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-6" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="{{ path('index') }}" class="navbar-brand"><img id="logo_ed" src="{{ asset('asset/img/logo2.png') }}"></a>
+                </div>
+                <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-6" aria-expanded="false" style="height: 1px;">
+                    <ul class="nav navbar-nav">
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                            <li><a href="{{ path('profil') }}">PROFIL</a></li>
+                        {% endif %}
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") and app.user.getisBan == 'off' %}
+                            <li><a href="{{ path('nouvelle_partie') }}">JOUER</a></li>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li><a href="{{ path('admin') }}">ADMIN</a></li>
+                        {% endif %}
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+
+                            <li><a href="{{ path('security_logout') }}">DECONNEXION</a></li>
+                        {% else %}
+                            <li><a href="{{ path('security_login') }}">CONNEXION</a></li>
+                        {% endif %}
+                        <li><a href="{{ path('user_registration') }}">INSCRIPTION</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div id="titre_page_cont">
+            <p id="titre_accueil">PROFIL</p>
+            <img id="logo_titre" src="{{ asset('asset/img/logo2.png') }}">
+        </div>
+    </div>
+{% endblock %}
+{% block body %}
+    <div class="container">
+        <hr class="hr_accueil">
+        <div class="panel panel-primary">
+            <div class="panel-heading"><h1>Votre profil&nbsp;&nbsp;<span class="glyphicon glyphicon-user"></span></h1></div>
+            <div class="panel-body">
+
+                {% if app.user.getisBan == 'on' %}
+                    <h2 style="color: #AA3333">Vous êtes ban, il est t'impossible pour vous de jouer.</h2>
+                {% endif %}
+
+                <table class="table">
+                    <thread>
+                        <tr>
+                            <th>
+                                Username
+                            </th>
+                            <th>
+                                Email
+                            </th>
+                            <th>
+                                NbPartie
+                            </th>
+                            <th>
+                                WinPartie
+                            </th>
+                            <th>
+                                Ban
+                            </th>
+                            <th>
+                                Action
+                            </th>
+                        </tr>
+                    </thread>
+                    <tbody>
+                    <tr>
+                        <th>
+                            {{ app.user.username }}
+                        </th>
+                        <th>
+                            {{ app.user.email }}
+                        </th>
+                        <th>
+                            {{ app.user.getNbPartie() }}
+                        </th>
+                        <th>
+                            {{ app.user.getWinParties() }}
+                        </th>
+                        <th>
+                            {{ app.user.getisBan() }}
+                        </th>
+                        <th>
+                            <a class="btn btn-primary" href="{{ path('user_modification') }}">Modifier</a>
+                        </th>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading"><h1>Vos parties&nbsp;&nbsp;<span class="glyphicon glyphicon-floppy-open"></span></h1></div>
+            <div class="panel-body">
+
+                {% if app.user.getisBan == 'on' %}
+                    <h2 style="color: #AA3333">Vous êtes ban, il est t'impossible pour vous de jouer.</h2>
+                {% endif %}
+
+
+<div id="partie_cont">
+
+
+                {% for partie in mypartie %}
+                    {% if partie.vainqueur == 'R' %}
+                        <div id="hover_effect">
+                        <a id="select_partie" href="{{ path('afficher_partie', {'id': partie.id}) }}">
+                            <div id="partie_j">
+                                {% if partie.j1.id != myid %}
+                                    <p id="adversaire">Votre adversaire : {{ partie.j1.username }}</p>
+                                {% else %}
+                                    <p id="adversaire">Votre adversaire : {{ partie.j2.username }}</p>
+                                {% endif %}
+                                {% if partie.tour == myid %}
+                                    <p id="tour">C'est votre tour</p>
+                                {% else %}
+                                    <p id="tour">Le tour est a l'adversaire</p>
+                                {% endif %}
+                                <p id="manche">Manche {{ partie.manche.nb }}</p>
+                            </div>
+                        </a>
+                        </div>
+                    {% endif %}
+
+                {% endfor %}
+</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,622 @@
+{% extends 'base.html.twig' %}
+ {% block stylesheets %}
+     <style>
+         @font-face {
+             font-family: "Stratum No1";
+             src: url({{asset('asset/fonts/stratumno1.ttf')}});
+         }
+         @font-face {
+             font-family: "Earth Orbiter";
+             src: url({{asset('asset/fonts/earthorbiter.ttf')}});
+         }
+     </style>
+     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+     <link rel="stylesheet" href="{{ asset('asset/css/accueil.css') }}" type="text/css" />
+
+     <link rel="stylesheet" href="{{ asset('asset/css/plateau.css') }}" type="text/css" />
+
+     <!-- Latest compiled and minified CSS -->
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+ {% endblock %}
+
+{% block header %}
+    <div id="background_top">
+        <nav class="navbar">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-6" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="{{ path('index') }}" class="navbar-brand"><img id="logo_ed" src="{{ asset('asset/img/logo2.png') }}"></a>
+                </div>
+                <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-6" aria-expanded="false" style="height: 1px;">
+                    <ul class="nav navbar-nav">
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                            <li><a href="{{ path('profil') }}">PROFIL</a></li>
+                        {% endif %}
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") and app.user.getisBan == 'off' %}
+                            <li><a href="{{ path('nouvelle_partie') }}">JOUER</a></li>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li><a href="{{ path('admin') }}">ADMIN</a></li>
+                        {% endif %}
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+
+                            <li><a href="{{ path('security_logout') }}">DECONNEXION</a></li>
+                        {% else %}
+                            <li><a href="{{ path('security_login') }}">CONNEXION</a></li>
+                        {% endif %}
+                        <li><a href="{{ path('user_registration') }}">INSCRIPTION</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div id="stat">
+        <div id="stat_container">
+            <p id="manche">Manche {{ manche.nb }}</p><p id="score_stat">Score <span id="score">{{ myScore.point_o }} / {{ myScore.point_o_nb }}</span> - <span id="score_ad">{{ hisScore.point_o }} / {{ hisScore.point_o_nb }}</span></p>
+        </div>
+        <div id="background_stat"></div>
+    </div>
+    <div id="game_border">
+        <div id="game_container" class="container-fluid">
+            <div id="action_adv">
+                {% if action_ad.dissimulation.etat == 0 %}
+                    <div><button ><img src="{{ asset('asset/img/crossr.png') }}"></button></div>
+                {% else %}
+                    <div><button disabled style="opacity: 0.3;"><img src="{{ asset('asset/img/crossr.png') }}"></button></div>
+                {% endif %}
+                {% if action_ad.secret.etat == 0 %}
+                    <div><button style=""><img src="{{ asset('asset/img/secretr.png') }}"></button></div>
+                {% else %}
+                    <div><button disabled style="opacity: 0.3;"><img src="{{ asset('asset/img/secretr.png') }}"></button></div>
+                {% endif %}
+                {% if action_ad.cadeau.etat == 0 %}
+                    <div><button ><img src="{{ asset('asset/img/giftr.png') }}"></button></div>
+                {% else %}
+                    <div><button disabled style="opacity: 0.3;"><img src="{{ asset('asset/img/giftr.png') }}"></button></div>
+                {% endif %}
+                {% if action_ad.concurrence.etat == 0 %}
+                    <div><button ><img src="{{ asset('asset/img/arrowr.png') }}"></button></div>
+                {% else %}
+                    <div><button disabled style="opacity: 0.3;"><img src="{{ asset('asset/img/arrowr.png') }}"></button></div>
+                {% endif %}
+            </div>
+            <div id="plateau_jeu">
+                <div id="pile">
+                    <div>
+                        <img style="width: 160px;" src="{{ asset('asset/img/dos.png') }}">
+                    </div>
+                </div>
+
+                {% for message in app.flashes('n_manche') %}
+                        <div class="flash-n_manche">
+                            {{ message }}
+                        </div>
+                {% endfor %}
+                {% for message in app.flashes('W_manche') %}
+                        <div style="background-color: #eeeeee" class="flash-n_manche">
+                            {{ message }}
+                        </div>
+                {% endfor %}
+                <div id="main_p">
+                    {% for obj in objectifs %}
+                        <div class="card text-white bg-dark mb-3" style="color: white;">
+                            <div style="min-height: 50px;">
+                                {% for key,value in hisTerrain %}
+                                    {% for key in value %}
+                                        {% if obj.id == cartes[key].objectifs.id %}
+                                            <img class="his_img_point" style="width: 40px" src="{{ asset('asset/img/point_r_' ~ cartes[key].objectifs.getNbPoints()~ '.png')  }}">
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for key,value in hisTerrain %}
+                                    {% if value is not iterable %}
+                                        {% if obj.id == cartes[value].objectifs.id %}
+                                            <img class="his_img_point" style="width: 40px" src="{{ asset('asset/img/point_r_' ~ cartes[value].objectifs.getNbPoints()~ '.png') }}">
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="grid_cont_div">
+                                <img class="grid_carte" src="{{ asset('asset/img/' ~ obj.getCarteImg()) }}">
+                                <div id="cont_t_jeton_{{ loop.index }}" class="grid_t_div"></div>
+                                <div class="grid_m_div">
+                                    <div id="jeton_{{ loop.index }}" class="cont_j"><img src="{{ asset('asset/img/jeton.png') }}" alt="jeton"></div>
+                                </div>
+                                <div id="cont_b_jeton_{{ loop.index }}" class="grid_b_div"></div>
+                            </div>
+                            <div style="min-height: 50px;">
+                                {% for key,value in myTerrain %}
+                                    {% for key in value %}
+                                        {% if obj.id == cartes[key].objectifs.id %}
+                                            <img class="my_img_point" style="width: 40px" src="{{ asset('asset/img/point_b_' ~ cartes[key].objectifs.getNbPoints()~ '.png') }}">
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for key,value in myTerrain %}
+                                    {% if value is not iterable %}
+                                        {% if obj.id == cartes[value].objectifs.id %}
+                                            <img class="my_img_point" style="width: 40px" src="{{ asset('asset/img/point_b_' ~ cartes[value].objectifs.getNbPoints() ~ '.png') }}">
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+
+
+            {% if partie.tour != currentUser.id %}
+                <div id="attendez">
+                    <p>Attendez votre tour</p>
+                </div>
+
+            {% else %}
+
+                <div id="action_p">
+                    {% if action.dissimulation.etat == 0 %}
+                        <div><button id="act_diss"><img src="{{ asset('asset/img/crossb.png') }}"></button></div>
+                    {% else %}
+                        <div><button style="opacity: 0.3;"><img src="{{ asset('asset/img/crossb.png') }}"></button></div>
+                    {% endif %}
+                    {% if action.secret.etat == 0 %}
+                        <div><button id="act_se"><img src="{{ asset('asset/img/secretb.png') }}"></button></div>
+                    {% else %}
+                        <div><button style="opacity: 0.3;"><img src="{{ asset('asset/img/secretb.png') }}"></button></div>
+                    {% endif %}
+                    {% if action.cadeau.etat == 0 %}
+                        <div><button id="act_cad"><img src="{{ asset('asset/img/giftb.png') }}"></button></div>
+                    {% else %}
+                        <div><button style="opacity: 0.3;"><img src="{{ asset('asset/img/giftb.png') }}"></button></div>
+                    {% endif %}
+                    {% if action.concurrence.etat == 0 %}
+                        <div><button id="act_conc"><img src="{{ asset('asset/img/arrowb.png') }}"></button></div>
+                    {% else %}
+                        <div><button style="opacity: 0.3;"><img src="{{ asset('asset/img/arrowb.png') }}"></button></div>
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
+        </div>
+    </div>
+    </div>
+    <div id="main_carte_cont">
+        <div id="main_p_cont">
+            <div id="cont_card">
+                {% for carte in main %}
+                    <div id="{{ carte.id }}" class="card_img"><img style="width: 130px;" src="{{ asset('asset/img/' ~ carte.img)}}"></div>
+                {% endfor %}
+            </div>
+        </div>
+        <div id="background_main_cont"></div>
+    </div>
+    <div id="chat_cont_bg">
+        <div id="chat_cont">
+            <p id="messages"></p>
+            <div id="chat_cont_input">
+                <input type="text" id="monPseudo" value="{{ myName }}">
+                <input type="text" id="monMessage" placeholder="Votre message...">
+                <button onclick="envoyer()">Envoyer</button>
+            </div>
+        </div>
+    </div>
+    <div id="button_chat_cont">
+        <div id="button_chat">
+            <img id="button_chat_img" src="{{ asset('asset/img/chat.png') }}">
+            <img id="button_chat_img_cross" src="{{ asset('asset/img/cross.png') }}">
+        </div>
+    </div>
+    <div id="recup_cadeau" class="display_none">
+
+    </div>
+    <div id="recup_conc" class="display_none">
+
+    </div>
+
+    <div id="form_dis" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span id="close" class="close">&times;</span>
+            <p>Dissimulation</p>
+
+            <form class="form_select" method="post" action="{{ path('afficher_partie', {'id': partie.id}) }}">
+                <label id="card_img_cont" for="get_1_card"></label>
+                <input id="get_1_card" name="carte_diss_1" type="text">
+                <label id="card_img_cont_2" for="get_2_card"></label>
+                <input id="get_2_card" name="carte_diss_2" type="text">
+                <button type="submit">Ok</button>
+            </form>
+            <button class="annuler1">Annuler</button>
+        </div>
+
+    </div>
+
+    <div id="form_sec" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span id="close1" class="close">&times;</span>
+            <p>Secret</p>
+
+            <form class="form_select" method="post" action="{{ path('afficher_partie', {'id': partie.id}) }}">
+                <label id="card_img_sec_cont" for="get_1_sec_card"></label>
+                <input id="get_1_sec_card" name="carte_sec_1" type="text">
+                <button type="submit">Ok</button>
+            </form>
+            <button class="annuler1">Annuler</button>
+        </div>
+
+    </div>
+
+    <div id="form_cad" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span id="close2" class="close">&times;</span>
+            <p>Cadeau</p>
+
+            <form class="form_select" method="post" action="{{ path('afficher_partie', {'id': partie.id}) }}">
+                <label id="card_img_cad_cont_1" for="get_1_cad_card"></label>
+                <input id="get_1_cad_card" name="carte_cad_1" type="text">
+                <label id="card_img_cad_cont_2" for="get_2_cad_card"></label>
+                <input id="get_2_cad_card" name="carte_cad_2" type="text">
+                <label id="card_img_cad_cont_3" for="get_3_cad_card"></label>
+                <input id="get_3_cad_card" name="carte_cad_3" type="text">
+                <button type="submit">Ok</button>
+            </form>
+            <button class="annuler1">Annuler</button>
+        </div>
+
+    </div>
+
+    <div id="form_conc" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span id="close3" class="close">&times;</span>
+            <p>Concurrence</p>
+
+            <form class="form_select" method="post" action="{{ path('afficher_partie', {'id': partie.id}) }}">
+                <label id="card_img_conc_cont_1" for="get_1_conc_card"></label>
+                <input id="get_1_conc_card" name="carte_conc_1" type="text">
+                <label id="card_img_conc_cont_2" for="get_2_conc_card"></label>
+                <input id="get_2_conc_card" name="carte_conc_2" type="text">
+                <label id="card_img_conc_cont_3" for="get_3_conc_card"></label>
+                <input id="get_3_conc_card" name="carte_conc_3" type="text">
+                <label id="card_img_conc_cont_4" for="get_4_conc_card"></label>
+                <input id="get_4_conc_card" name="carte_conc_4" type="text">
+                <button type="submit">Ok</button>
+            </form>
+            <button class="annuler1">Annuler</button>
+        </div>
+
+    </div>
+
+
+{% endblock %}
+ {% block footer %}
+     <div>
+         <div class="container">
+         </div>
+         <div id="background_bot">
+
+             <div id="footer_page_cont">
+                 <img id="logo_footer" src="{{ asset('asset/img/logonwaaar.png') }}">
+                 <p id="copyright">©2018 BananaGames. Tous droit réservés. Condition d'utilisation - Politique de confidentialité - Conditions générales de vente - Mention légales</p>
+             </div>
+
+         </div>
+     </div>
+ {% endblock %}
+    {% block javascripts %}
+        <script
+                src="https://code.jquery.com/jquery-3.3.1.min.js"
+                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+                crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script src="{{ asset('asset/js/chat/socket.io.js') }}"></script>
+        <script>
+
+
+            var socket = io.connect('http://149.91.88.165:8080');
+
+
+
+                $('#monMessage').on('keydown', function (e) {
+                    if (e.which == 13) {
+
+                        if (document.getElementById("monMessage").value != "") {
+                        var pseudo = document.getElementById("monPseudo").defaultValue;
+                        var mymessage = document.getElementById("monMessage").value;
+
+
+                        socket.on('serveurversclient', function (texte) {
+                            document.getElementById("messages").innerHTML = texte;
+                        });
+
+                        var leMessage = '<div class="message_pers ' + pseudo + '"><p class="nom_per">' + pseudo + '</p><p class="mes_per">' + mymessage + '</p></div>';
+                        socket.emit('clientversserveur', leMessage);
+                        document.getElementById("monMessage").value = "";
+
+                            var pseudo = document.getElementById("monPseudo").defaultValue;
+                            var i;
+                            for (i = 0; i < $('.'+pseudo).length ; i++) {
+                                $('.'+pseudo)[i].style.backgroundColor = "#37bdd3";
+                                $('.'+pseudo)[i].style.marginLeft = "30px";
+                                $('.'+pseudo)[i].style.marginRight = "0px";
+
+                            }
+                        }
+
+                    }
+                });
+
+                setInterval(function () {
+                    var pseudo = document.getElementById("monPseudo").defaultValue;
+                    var i;
+                    for (i = 0; i < $('.'+pseudo).length ; i++) {
+                        $('.'+pseudo)[i].style.backgroundColor = "#37bdd3";
+                        $('.'+pseudo)[i].style.marginLeft = "30px";
+                        $('.'+pseudo)[i].style.marginRight = "0px";
+                    }
+
+
+
+                },50);
+
+
+
+            function envoyer() {
+
+
+                    var pseudo = document.getElementById("monPseudo").defaultValue;
+                    var mymessage = document.getElementById("monMessage").value;
+
+
+                    socket.on('serveurversclient', function (texte) {
+                        document.getElementById("messages").innerHTML = texte;
+                    });
+
+                    var leMessage = '<div class="message_pers ' + pseudo + '"><p class="nom_per">' + pseudo + '</p><p class="mes_per">' + mymessage + '</p></div>';
+                    socket.emit('clientversserveur', leMessage);
+                    document.getElementById("monMessage").value = "";
+
+                    var elmt = document.getElementsByClassName(pseudo);
+
+                    elmt.style.color = "#0f0";
+                }
+
+
+
+        </script>
+        <script>
+            document.getElementById("button_chat_img").onclick = function (){chaton()};
+            document.getElementById("button_chat_img_cross").onclick = function () { closechat();};
+
+            function chaton() {
+                //document.getElementById("chat_cont_bg").style.left = "-294px";
+                $("#chat_cont_bg").animate({ "left": "0px" }, "slow");
+                $("#button_chat_cont").animate({ "left": "15px", "bottom":"12px" }, "slow");
+                document.getElementById("button_chat_img").style.display = "none";
+                document.getElementById("button_chat_img_cross").style.display = "block";
+
+            }
+
+            function closechat() {
+                $("#chat_cont_bg").animate({ "left": "-304px" }, "slow");
+                $("#button_chat_cont").animate({ "left": "40px", "bottom":"70px" }, "slow");
+                document.getElementById("button_chat_img").style.display = "block";
+                document.getElementById("button_chat_img_cross").style.display = "none";
+            }
+        </script>
+        <script type="text/javascript" src="{{ asset('asset/js/move_animate.js') }}"></script>
+        <script>
+
+            function refreshP() {
+
+
+                $.ajax({
+                    url: '{{ path('refresh_partie', {'id': partie.id }) }}',
+                    success: function (data) {
+
+
+                        var obj_cad = $('#recup_cadeau');
+                        var obj_conc = $('#recup_conc');
+
+                        var att = document.getElementById("recup_cadeau").getAttribute("class");
+                        var att_conc = document.getElementById("recup_conc").getAttribute("class");
+
+                        if (data.monTour !== {{ partie.tour }} || data.siGagnant !== '{{ partie.vainqueur }}' || data.siNvManche !== {{ partie.manche.nb }} ) {
+                            window.location.assign(document.URL);
+                        }
+
+                        if (data.actionAdv.cadeau.carte.length > 0) {
+                            $('#recup_cadeau').load("{{ path('recup_carte_cad', {'id': partie.id} ) }}");
+                            obj_cad.removeClass('display_none');
+
+                        } else if (data.actionAdv.cadeau.carte.length == null && att !== 'display_none') {
+                            obj_cad.addClass('display_none');
+                        }
+
+                        if (data.actionAdv.concurrence.carte.p1.length > 0) {
+                            $('#recup_conc').load("{{ path('recup_carte_conc', {'id': partie.id} ) }}");
+                            obj_conc.removeClass('display_none');
+
+                        } else if (data.actionAdv.concurrence.carte.p1.length == null && att_conc !== 'display_none') {
+                            obj_conc.addClass('display_none');
+                        }
+
+                        if(data.objectif_attr.p_1.jeton !== 0){
+                            if(data.objectif_attr.p_1.jeton === data.myId){
+                                moveAnimate('#jeton_1','#cont_b_jeton_1');
+                            }
+                            if(data.objectif_attr.p_1.jeton === data.hisId){
+                                moveAnimate('#jeton_1','#cont_t_jeton_1');
+                            }
+                        }
+                        if(data.objectif_attr.p_2.jeton !== 0){
+                            if(data.objectif_attr.p_2.jeton === data.myId){
+                                moveAnimate('#jeton_2','#cont_b_jeton_2');
+                            }
+                            if(data.objectif_attr.p_2.jeton === data.hisId){
+                                moveAnimate('#jeton_2','#cont_t_jeton_2');
+                            }
+                        }
+                        if(data.objectif_attr.p_3.jeton !== 0){
+                            if(data.objectif_attr.p_3.jeton === data.myId){
+                                moveAnimate('#jeton_3','#cont_b_jeton_3');
+                            }
+                            if(data.objectif_attr.p_3.jeton === data.hisId){
+                                moveAnimate('#jeton_3','#cont_t_jeton_3');
+                            }
+                        }
+                        if(data.objectif_attr.p_4.jeton !== 0){
+                            if(data.objectif_attr.p_4.jeton === data.myId){
+                                moveAnimate('#jeton_4','#cont_b_jeton_4');
+                            }
+                            if(data.objectif_attr.p_4.jeton === data.hisId){
+                                moveAnimate('#jeton_4','#cont_t_jeton_4');
+                            }
+
+                        }
+                        if(data.objectif_attr.p_5.jeton !== 0) {
+                            if (data.objectif_attr.p_5.jeton === data.myId) {
+                                moveAnimate('#jeton_5', '#cont_b_jeton_5');
+                            }
+                            if (data.objectif_attr.p_5.jeton === data.hisId) {
+                                moveAnimate('#jeton_5', '#cont_t_jeton_5');
+
+                            }
+                        }
+                        if(data.objectif_attr.p_6.jeton !== 0){
+                            if(data.objectif_attr.p_6.jeton === data.myId){
+                                moveAnimate('#jeton_6','#cont_b_jeton_6');
+                            }
+                            if(data.objectif_attr.p_6.jeton === data.hisId){
+                                moveAnimate('#jeton_6','#cont_t_jeton_6');
+                            }
+                        }
+                        if(data.objectif_attr.p_7.jeton !== 0){
+                            if(data.objectif_attr.p_7.jeton === data.myId){
+                                moveAnimate('#jeton_7','#cont_b_jeton_7');
+                            }
+                            if(data.objectif_attr.p_7.jeton === data.hisId){
+                                moveAnimate('#jeton_7','#cont_t_jeton_7');
+                            }
+
+                        }
+
+
+                    }
+                });
+            }
+            window.onload = refreshP();
+            setInterval(function () {
+                refreshP()
+            },5000);
+
+        </script>
+        <script>
+            // Get the modal
+            var modal = document.getElementById('form_dis');
+
+            // Get the button that opens the modal
+            var btn = document.getElementById("act_diss");
+
+            // Get the <span> element that closes the modal
+            var span = document.getElementById("close");
+
+            // When the user clicks the button, open the modal
+            btn.onclick = function() {
+                modal.style.display = "block";
+            };
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function() {
+                modal.style.display = "none";
+            };
+
+        </script>
+        <script>
+
+            // Get the modal
+            var modal1 = document.getElementById('form_sec');
+
+            // Get the button that opens the modal
+            var btn1 = document.getElementById("act_se");
+
+            // Get the <span> element that closes the modal
+            var span1 = document.getElementById("close1");
+
+            // When the user clicks the button, open the modal
+            btn1.onclick = function() {
+                modal1.style.display = "block";
+            };
+
+            // When the user clicks on <span> (x), close the modal
+            span1.onclick = function() {
+                modal1.style.display = "none";
+            };
+
+        </script>
+        <script>
+
+            // Get the modal
+            var modal2 = document.getElementById('form_cad');
+
+            // Get the button that opens the modal
+            var btn2 = document.getElementById("act_cad");
+
+            // Get the <span> element that closes the modal
+            var span2 = document.getElementById("close2");
+
+            // When the user clicks the button, open the modal
+            btn2.onclick = function() {
+                modal2.style.display = "block";
+            };
+
+            // When the user clicks on <span> (x), close the modal
+            span2.onclick = function() {
+                modal2.style.display = "none";
+            };
+
+        </script>
+        <script>
+
+            // Get the modal
+            var modal3 = document.getElementById('form_conc');
+
+            // Get the button that opens the modal
+            var btn3 = document.getElementById("act_conc");
+
+            // Get the <span> element that closes the modal
+            var span3 = document.getElementById("close3");
+
+            // When the user clicks the button, open the modal
+            btn3.onclick = function() {
+                modal3.style.display = "block";
+            };
+
+            // When the user clicks on <span> (x), close the modal
+            span3.onclick = function() {
+                modal3.style.display = "none";
+            };
+
+        </script>
+        <script type="text/javascript" src="{{ asset('asset/js/animation_action.js') }}"></script>
+    {% endblock %}
+

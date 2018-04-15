@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+{% block stylesheets %}
+    <style type="text/css">
+        @font-face {
+            font-family: "Stratum No1";
+            src: url({{asset('asset/fonts/stratumno1.ttf')}});
+        }
+        @font-face {
+            font-family: "Stratum_blod";
+            src: url({{asset('asset/fonts/stratumno1_bold.ttf')}});
+        }
+        .navbar{
+            font-family: "Stratum No1", sans-serif;
+
+        }
+        #background_top{
+            background-image: url({{ asset('asset/img/fond_top.png')}});
+            background-repeat: no-repeat;
+            background-size: 100%;
+            padding-top: 2%;
+
+        }
+        #background_bot{
+            background-image: url({{ asset('asset/img/fond_bottom.png')}});
+            background-repeat: no-repeat;
+            background-size: 100%;
+            background-position: bottom;
+            padding-bottom: 30px;
+        }
+    </style>
+    <link rel="stylesheet" href="{{ asset('asset/css/accueil.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('asset/css/connexion.css') }}" type="text/css" />
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+{% endblock %}
+
+{% block header %}
+    <div id="background_top">
+        <nav class="navbar">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-6" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="{{ path('index') }}" class="navbar-brand"><img id="logo_ed" src="{{ asset('asset/img/logo2.png') }}"></a>
+                </div>
+                <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-6" aria-expanded="false" style="height: 1px;">
+                    <ul class="nav navbar-nav">
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                            <li><a href="{{ path('profil') }}">PROFIL</a></li>
+                        {% endif %}
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") and app.user.getisBan == 'off' %}
+                            <li><a href="{{ path('nouvelle_partie') }}">JOUER</a></li>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <li><a href="{{ path('admin') }}">ADMIN</a></li>
+                        {% endif %}
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+
+                            <li><a href="{{ path('security_logout') }}">DECONNEXION</a></li>
+                        {% else %}
+                            <li><a href="{{ path('security_login') }}">CONNEXION</a></li>
+                        {% endif %}
+                        {#<li><a href="{{ path('security_login')}}">Connexion</a></li>#}
+                        <li><a href="{{ path('user_registration') }}">INSCRIPTION</a></li>
+                        {#<li><a href="{{ path('security_logout')}}">Déconnexion</a></li>#}
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div id="titre_page_cont">
+            <p id="titre_accueil">CONNEXION</p>
+            <img id="logo_titre" src="{{ asset('asset/img/logo2.png') }}">
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block body %}
+    {% if error %}
+        <div class="alert alert-danger">
+            {{ error.messageKey }}
+        </div>
+    {% endif %}
+    <div class="container">
+        <hr class="hr_accueil">
+        <div id="row_login" class="row">
+            <div id="connexion_cont" class="col-sm-5">
+                <div>
+                    <form action="{{ path('security_login') }}" method="post">
+                        <fieldset>
+                            <p id="titre_form">Connexion</p>
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <div class="background_input">
+                                    <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Mot de passe</label>
+                                <div class="background_input">
+                                    <input type="password" id="password" name="_password" class="form-control" />
+                                </div>
+                            </div>
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"/>
+                            <button type="submit" class="btn">
+                                <i class="fa fa-sign-in" aria-hidden="true"></i> On entre
+                            </button>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

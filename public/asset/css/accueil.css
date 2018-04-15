@@ -1,0 +1,72 @@
+body{
+    height: 100%;
+}
+
+/* NAVBAR */
+
+.icon-bar{
+    background-color: black!important;
+}
+
+#logo_ed{
+    width: 100px;
+}
+
+.navbar-brand, .navbar-nav > li > a {
+    color: #2a2a2a!important;
+}
+
+#titre_page_cont{
+    text-align: center;
+    height:50vh;
+    display: flex;
+    flex-direction: column;
+
+}
+
+#titre_accueil{
+    margin: auto;
+    background-color: black;
+    color: white;
+    margin-bottom: 30px;
+    font-family: "Stratum No1", sans-serif;
+    font-size: 27pt;
+    padding: 7px 20px;
+}
+
+#logo_titre{
+    margin: auto;
+    margin-top: unset;
+}
+
+.navbar-right > li {
+    background-color: black!important;
+}
+
+.navbar-right > li > a{
+    color: white!important;
+}
+
+.hr_accueil{
+    height: 5px;
+    background: linear-gradient(0.25turn, #00cdff, #77a1f0, #c95ed3, #ff00b3) !important;
+    border-radius: 10px;
+}
+
+#footer_page_cont{
+    text-align: center;
+    height:40vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#logo_footer{
+    margin: auto auto 20px;
+    width: 25%;
+}
+
+#copyright{
+    font-size: 9pt;
+    font-family: sans-serif;
+    margin: unset auto auto;
+}

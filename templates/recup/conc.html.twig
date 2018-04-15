@@ -1,0 +1,28 @@
+<p>Choisissez votre paire</p>
+<form method="post" action="{{ path('afficher_partie', {'id': partie.id}) }}">
+    {% set key_p1 = 0 %}
+    {% for key in action_ad.concurrence.carte.p1  %}
+        {% if loop.index < 2 %}
+            <label class="label_cadeau"><img src="{{ asset('asset/img/' ~ cartes[key].img ) }}"></label>
+            <input class="input_cadeau" type="text" name="recup_conc_p1_{{ key_p1 + 1 }}" value="{{ key }}"/>
+        {% else %}
+            <label class="label_cadeau"><img src="{{ asset('asset/img/' ~ cartes[key].img ) }}"></label>
+            <input class="input_cadeau" type="text" name="recup_conc_p1_{{ key_p1 + 2 }}" value="{{ key }}"/>
+        {% endif %}
+    {% endfor %}
+    <button type="submit">Paire 1</button>
+</form>
+<form method="post" action="{{ path('afficher_partie', {'id': partie.id}) }}">
+    {% set key_p2 = 0 %}
+    {% for key in action_ad.concurrence.carte.p2  %}
+        {% if loop.index < 2 %}
+            <label class="label_cadeau"><img src="{{ asset('asset/img/' ~ cartes[key].img ) }}"></label>
+            <input class="input_cadeau" type="text" name="recup_conc_p2_{{ key_p2 + 1 }}" value="{{ key }}"/>
+        {% else %}
+            <label class="label_cadeau"><img src="{{ asset('asset/img/' ~ cartes[key].img ) }}"></label>
+            <input class="input_cadeau" type="text" name="recup_conc_p2_{{ key_p2 + 2 }}" value="{{ key }}"/>
+        {% endif %}
+    {% endfor %}
+    <button type="submit">Paire 2</button>
+
+</form>

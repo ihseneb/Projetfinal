@@ -1,0 +1,40 @@
+#row_inscription{
+     display: flex;
+ }
+#inscription_cont{
+    margin: auto;
+    background-color: black;
+    font-family: "Stratum_blod", sans-serif;
+    color: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+#inscription_cont:hover{
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+#titre_form{
+    font-family: "Stratum No1", sans-serif;
+    font-size: 17pt;
+}
+
+
+.well{
+    background-image: unset!important;
+}
+
+.btn{
+    background-color: white;
+    color: black;
+}
+
+.background_input{
+    padding-bottom: 3px;
+    background: -moz-linear-gradient(90deg, #00CDFF 0%, #77A1F0 28%, #C95ED3 67%, #FF00B3 87%, #FF00B3 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FF00B3), color-stop(13%, #FF00B3), color-stop(33%, #C95ED3), color-stop(72%, #77A1F0), color-stop(100%, #00CDFF));
+    background: -webkit-linear-gradient(90deg, #00CDFF 0%, #77A1F0 28%, #C95ED3 67%, #FF00B3 87%, #FF00B3 100%);
+    background: -o-linear-gradient(90deg, #00CDFF 0%, #77A1F0 28%, #C95ED3 67%, #FF00B3 87%, #FF00B3 100%);
+    background: -ms-linear-gradient(90deg, #00CDFF 0%, #77A1F0 28%, #C95ED3 67%, #FF00B3 87%, #FF00B3 100%);
+    background: linear-gradient(90deg, #00CDFF 0%, #77A1F0 28%, #C95ED3 67%, #FF00B3 87%, #FF00B3 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FF00B3', endColorstr='#00CDFF',GradientType=0 );
+    border-radius: 4px;
+}

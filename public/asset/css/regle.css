@@ -1,0 +1,13 @@
+.container{
+    font-family: "Stratum No1", sans-serif;
+    text-align: justify;
+}
+
+#footer_flag{
+    display:flex;
+    justify-content: center;
+ }
+
+#footer_flag > a > img{
+    width: 80px;
+}

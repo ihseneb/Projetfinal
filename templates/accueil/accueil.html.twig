@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+    <hr class="hr_accueil">
+    <h1>Accueil</h1>
+    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+        <h2>Bienvenue {{ app.user.username }} !</h2>
+    {% else %}
+        <h2>Bienvenue, connectez vous !</h2>
+    {% endif %}
+</div>
+{% endblock %}

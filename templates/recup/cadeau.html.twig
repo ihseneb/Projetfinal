@@ -1,0 +1,10 @@
+<form method="post" action="{{ path('afficher_partie', {'id': partie.id}) }}">
+    <p>Choisissez votre carte</p>
+{% for key in action_ad.cadeau.carte  %}
+               <label class="label_cadeau">
+                   <input class="input_cadeau" type="radio" name="recup_cadeau" value="{{ key }}"/>
+                   <img src="{{ asset('asset/img/' ~ cartes[key].img ) }}">
+               </label>
+{% endfor %}
+    <button type="submit">Ok</button>
+</form>
